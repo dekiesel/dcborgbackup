@@ -1,0 +1,19 @@
+from . import helpers
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class FolderNotMounted(Exception):
+    pass
+
+
+def pre(**kwargs):
+    # Check that this mountpoint is mounted before running borg
+    mp = "/mnt/externaldisk1"
+    logger.info(f"Checking that mountpoint {mp} is used.")
+    is_mp = helpers.is_mountpoint(mp)
+    if not is_mp:
+        raise FolderNotMounted(f"Nothing mounted to {mp}.")
+    else:
+        logger.info("It's a mountpoint.")

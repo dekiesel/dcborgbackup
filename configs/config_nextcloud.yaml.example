@@ -1,0 +1,15 @@
+rootfolder: /home/pi/docker/
+foldername: nextcloud
+borgserver: SERVER
+repo_encrypted: True
+expected_user: root
+#Optional
+borgrepo: Nextcloud
+borgfolder: Nextcloud
+prepost: nextcloud
+debug: True
+docker_compose: True
+borg_parameters:
+  info: "--remote-path=borg1"
+  create: "--stats --progress --compression lzma,5 --remote-path=borg1 --files-cache mtime,size"
+  prune: "--remote-path=borg1 -v --list --keep-within=1d --keep-daily=7 --keep-weekly=4 --keep-monthly=12"
