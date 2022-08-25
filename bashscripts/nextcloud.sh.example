@@ -1,0 +1,1 @@
+python3 ../dcborgbackup.py ../configs/config_nextcloud.yaml.example ../secrets.yaml.example

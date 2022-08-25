@@ -10,12 +10,16 @@ from importlib import import_module
 import yaml
 from cmdrunner import cmd_run
 import borg
+import pathlib
 
 
 telegram_bot = None
 configuration = None
 secrets = None
 logger = logging.getLogger(__name__)
+
+scriptfolder = pathlib.Path(__file__).parent.resolve()
+print(scriptfolder)
 
 
 class UnexpectedUser(Exception):
@@ -279,8 +283,8 @@ def read_config(configfile: str) -> None:
     # Optional keys:
     if "borgrepo" not in config:
         config["borgrepo"] = config["foldername"]
-    if "borgfolder" not in config:
-        config["mandatory"]["borgfolder"] = config["foldername"]
+    if "borgarchive" not in config:
+        config["borgarchive"] = config["foldername"]
     if "debug" not in config:
         config["debug"] = False
     if "telegram" not in config:
@@ -365,7 +369,9 @@ def start(configfile: str, secretsfile: str) -> None:
         if configuration["prepost"]:
             if configuration["prepost"].endswith(".py"):
                 configuration["prepost"] = configuration["prepost"][0:-3]
-            file = os.path.join("prepost", f"{configuration['prepost']}.py")
+            file = os.path.join(
+                scriptfolder, "prepost", f"{configuration['prepost']}.py"
+            )
             if not os.path.isfile(file):
                 raise FileNotFoundError(f"Prepostfile {file} not found.")
         set_password()

@@ -5,7 +5,7 @@ repo_encrypted: True
 expected_user: root
 #Optional
 borgrepo: Nextcloud
-borgfolder: Nextcloud
+borgarchive: Nextcloud
 prepost: nextcloud
 debug: True
 docker_compose: True

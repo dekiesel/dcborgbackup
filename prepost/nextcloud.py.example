@@ -17,3 +17,6 @@ def pre(**kwargs):
         raise FolderNotMounted(f"Nothing mounted to {mp}.")
     else:
         logger.info("It's a mountpoint.")
+        
+def post(**kwargs):
+    pass

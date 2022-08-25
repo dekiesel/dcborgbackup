@@ -11,7 +11,7 @@ class TestBorg(unittest.TestCase):
         "borguser": 123,
         "borgserver": "test.com",
         "borgrepo": "testrepo",
-        "borgfolder": "testfolder",
+        "borgarchive": "testfolder",
         "rootfolder": "root/folder",
         "foldername": "testfolder",
         "borg_parameters": {"create": "", "prune": "", "info": ""},

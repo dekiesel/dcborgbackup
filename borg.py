@@ -68,7 +68,7 @@ def create(**kwargs) -> None:
     """
     my_env = {**os.environ, "BORG_PASSPHRASE": f"{kwargs['password']}"}
     params = _get_parameters("create", **kwargs)
-    cmd = f"borg create {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}::{kwargs['borgfolder']}-{{now:%Y-%m-%d-%H%M%S}} {kwargs['rootfolder']}{kwargs['foldername']}"  # double {{ to escape for f-string
+    cmd = f"borg create {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}::{kwargs['borgarchive']}-{{now:%Y-%m-%d-%H%M%S}} {kwargs['rootfolder']}{kwargs['foldername']}"  # double {{ to escape for f-string
 
     result = cmd_run(cmd, env=my_env, **kwargs)
     if result.returncode != 0:
