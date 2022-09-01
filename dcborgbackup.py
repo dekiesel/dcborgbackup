@@ -390,7 +390,7 @@ def start(configfile: str, secretsfile: str) -> None:
         notify(tb)
         if not isinstance(e, PasswordNotSetCorrectlyError) and not isinstance(
             e, borg.RepoDoesNotExist
-        ):  #'docker-compose down' hasn't run at those stages so no need to bring the stack up
+        ):  # 'docker-compose down' hasn't run at those stages so no need to bring the stack up
             if configuration["docker_compose"]:
                 docker_compose()
         logger.error(message)
