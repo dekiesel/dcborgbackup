@@ -121,6 +121,7 @@ def repo_checks(**kwargs) -> None:
     check_ssh_login(**kwargs)
     stdout = info(**kwargs)
     _check_repo_exists(stdout)
+
     if kwargs["repo_encrypted"]:
         if _repo_encrypted_with_repokey(stdout):
             _check_password_correct(stdout)

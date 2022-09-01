@@ -22,6 +22,10 @@ scriptfolder = pathlib.Path(__file__).parent.resolve()
 print(scriptfolder)
 
 
+class PasswordNotSetCorrectlyError(Exception):
+    pass
+
+
 class UnexpectedUser(Exception):
     pass
 
@@ -73,7 +77,7 @@ def set_password() -> None:
         try:
             password = secrets["repo_passwords"][configuration["foldername"]]
         except KeyError:
-            raise KeyError(
+            raise PasswordNotSetCorrectlyError(
                 f"Password for repo not found. The key of the repo-password must be the same as foldername {configuration['foldername']}"
             )
     configuration["password"] = password
@@ -384,8 +388,11 @@ def start(configfile: str, secretsfile: str) -> None:
         )
         notify(message)
         notify(tb)
-        if configuration["docker_compose"]:
-            docker_compose()
+        if not isinstance(e, PasswordNotSetCorrectlyError) and not isinstance(
+            e, borg.RepoDoesNotExist
+        ):  #'docker-compose down' hasn't run at those stages so no need to bring the stack up
+            if configuration["docker_compose"]:
+                docker_compose()
         logger.error(message)
         logger.error(tb)
         raise e
