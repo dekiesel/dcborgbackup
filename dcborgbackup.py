@@ -388,8 +388,10 @@ def start(configfile: str, secretsfile: str) -> None:
         )
         notify(message)
         notify(tb)
-        if not isinstance(e, PasswordNotSetCorrectlyError) and not isinstance(
-            e, borg.RepoDoesNotExist
+        if (
+            not isinstance(e, PasswordNotSetCorrectlyError)
+            and not isinstance(e, borg.RepoDoesNotExist)
+            and not isinstance(e, UnexpectedUser)
         ):  # 'docker-compose down' hasn't run at those stages so no need to bring the stack up
             if configuration["docker_compose"]:
                 docker_compose()
