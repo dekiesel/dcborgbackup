@@ -6,7 +6,7 @@ Take your docker-compose stack down, send a backup of the folder to a borg-serve
 To create a full backup of your stack the following folder-structure is recommended:
 
 ```
-project
+project-folder
 │   docker-compose.yaml
 │   README    
 │
@@ -57,16 +57,58 @@ This file contains all the configurations you want to pass to the script.
 
 | Key  | Mandatory   | Note  |
 |---|---|---|
-|  adscwc | vwwev  | wev  |
-|   |   |   |
-|   |   |   |
-|   |   |   |
-|   |   |   |
-|   |   |   |
-|   |   |   |
-|   |   |   |
+|  rootfolder | Yes  | Folder containing your project folder  |
+|  foldername | Yes  | The name of your project folder  |
+| borgserver  |  Yes | The hostname or IP of the remote borg server  |
+| expected_user  | Yes  | The user this script expects to be run as, i.e. the user that may read all files you want to back up.. If your containers run as `root` this should likely be `root`  |
+|  repo_encrypted | Yes  | Is this repo encrypted (using repokey)? If `True` you need to put a password into `secrets.yaml`  |
+| borgrepo  | No  | If omitted `foldername` will be used  |
+| borgarchive  | No  | If omitted `foldername` will be used  |
+|  prepost |  No | A pre or post script to execute  |
+| debug  | No  |  If `True` the script will only print what it will do |
+| docker_compose  | No  | If `True` the script will take the stack down and restart it after the backup  |
+| borg_parameters  | No  |  Dict of parameters to add to borg. |
 
 
+`borg_parameters` may contain the keys `info`, `create` or `prune` and the corresponding values will be added to the borg commands at runtime.
+
+#### Example:
+```
+borg_parameters:
+  info: "--remote-path=borg1"
+```
+Will add `--remote-path=borg1` to each call of `borg info...`
+
+If `borgrepo` and `borgarchive` are not set the script will use `foldername` instead both times.
+
+#### Example:
+If both `borgrepo` and `borgarchive` are defined `borg create ... ` will be called like this:
+
+```
+borg create <borg_parameters['create']> <borguser>@<borgserver>:<borgrepo>::<borgarchive>-%Y-%m-%d-%H%M%S <rootfolder><foldername>
+```
+If omitted the script will use `foldername`:
+```
+borg create <borg_parameters['create']> <borguser>@<borgserver>:<foldername>::<foldername>-%Y-%m-%d-%H%M%S <rootfolder><foldername>
+```
+## Calling the script
+
+```
+dcborgbackup.py config_yaml secrets.yaml
+```
+## Prepost
+
+Sometimes it is necessary to run a script before or after running the backup. If you wish to do that put a script into the folder `prepost` containing a `pre()` or `post()` function and use the option `prepost` in `config.yaml` to let the dcborgbackup know where your script is.
+
+#### Example
+Your functions are in `prepost/myprepost.py`:
+
+config.yaml:
+```
+...
+prepost: myprepost
+...
+```
 
 ### Dependencies
 
