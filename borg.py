@@ -7,6 +7,9 @@ import re
 logger = logging.getLogger(__name__)
 
 
+class BorgErrorGettingLock(Exception):
+    pass
+
 class BorgNotInstalled(Exception):
     pass
 
@@ -104,6 +107,9 @@ def info(**kwargs) -> str:
     cmd = f"borg info {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}"
 
     result = cmd_run(cmd, env=my_env, **kwargs)
+    contains = re.search("Failed to create/acquire the lock", result.stdout)
+    if contains:
+        raise BorgErrorGettingLock("Couldn't create/aquire the lock. Check if you can delete the lock.")
     if result.returncode != 0:
         _check_repo_exists(result.stdout)
         raise BorgError("Error running borg info")

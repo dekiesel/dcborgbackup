@@ -16,6 +16,7 @@ import pathlib
 telegram_bot = None
 configuration = None
 secrets = None
+dc_down = False
 logger = logging.getLogger(__name__)
 
 scriptfolder = pathlib.Path(__file__).parent.resolve()
@@ -63,6 +64,7 @@ def docker_compose(up: bool = True) -> None:
     result = cmd_run(cmd, debug=configuration["debug"])
     if result.returncode != 0:
         raise DockerComposeError("Error running docker-compose")
+    dc_down = True
 
 
 def set_password() -> None:
@@ -388,11 +390,7 @@ def start(configfile: str, secretsfile: str) -> None:
         )
         notify(message)
         notify(tb)
-        if (
-            not isinstance(e, PasswordNotSetCorrectlyError)
-            and not isinstance(e, borg.RepoDoesNotExist)
-            and not isinstance(e, UnexpectedUser)
-        ):  # 'docker-compose down' hasn't run at those stages so no need to bring the stack up
+        if dc_down:  # check whether this script has taken the stack down
             if configuration["docker_compose"]:
                 docker_compose()
         logger.error(message)
