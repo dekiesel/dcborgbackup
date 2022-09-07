@@ -1,44 +1,79 @@
-# Project Title
+# DCBorgBackup
 
-Simple overview of use/purpose.
+Take your docker-compose stack down, send a backup of the folder to a borg-server, start your stack again and notify user via Telegram (optional).
 
 ## Description
+To create a full backup of your stack the following folder-structure is recommended:
 
-An in-depth paragraph about your project and overview of use.
+```
+project
+│   docker-compose.yaml
+│   README    
+│
+└───persistant-data
+│   │   
+│   │
+│   |----container_1
+│   |    │   
+│   |    │   data.db
+│   |    │   ...
+│   |
+    |----container_2
+    |    |
+    |    |  file.txt
+         |  ...
+
+```
+Everything you want to back up should be in a subfolder of the folder that contains your `docker-compose.yaml`.
+
+At runtime the script will check that the remote server is reachable, that there is a repo and check whether it is encrypted or not.
 
 ## Getting Started
+1. Clone this repo
+2. Create a secret.yaml file containing the keys you need (see secret.yaml).
+3. Create a config.yaml (see config.yaml)
+4. Optional: Create a bash script to call this script with config.yaml and secret.yaml 
+
+## secrets.yaml
+This file contains all the sensitive information the script needs to run. 
+
+Example with explanations:
+
+```
+#Mandatory:
+borguser: 12345                                 #User to connect to remote
+
+#Optional:
+repo_passwords:                                 #List of passwords per borg-repo
+  nextcloud: my_pass                            #Password for repo 'nextcloud'
+telegram:                                       #Telegram-specific keys
+  bot_token: mybotok3nefwefwefFFRwsefDNAUuo     #Telegram bot token
+  chatids:                                      #List of chats to notify
+    - 9876543                                   
+```
+## config.yaml
+This file contains all the configurations you want to pass to the script.
+
+
+| Key  | Mandatory   | Note  |
+|---|---|---|
+|  adscwc | vwwev  | wev  |
+|   |   |   |
+|   |   |   |
+|   |   |   |
+|   |   |   |
+|   |   |   |
+|   |   |   |
+|   |   |   |
+
+
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* Your user can ssh to the remote server
+* python >= 3.6
 
-### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
-
-### Executing program
-
-* How to run the program
-* Step-by-step bullets
-```
-code blocks for commands
-```
-
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
-## Authors
-
-Contributors names and contact info
-
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
 
 ## Version History
 
