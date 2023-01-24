@@ -70,6 +70,8 @@ def create(**kwargs) -> None:
         BorgError: Raises this exception when the command didn't run successfully.
     """
     my_env = {**os.environ, "BORG_PASSPHRASE": f"{kwargs['password']}"}
+    if "borg_relocated_repo_access_is_ok" in kwargs:
+        my_env["BORG_RELOCATED_REPO_ACCESS_IS_OK"] = kwargs["borg_relocated_repo_access_is_ok"]
     params = _get_parameters("create", **kwargs)
     cmd = f"borg create {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}::{kwargs['borgarchive']}-{{now:%Y-%m-%d-%H%M%S}} {kwargs['rootfolder']}{kwargs['foldername']}"  # double {{ to escape for f-string
 
@@ -85,6 +87,8 @@ def prune(**kwargs) -> None:
         BorgError: Raises this exception whent he command didn't run successfully
     """
     my_env = {**os.environ, "BORG_PASSPHRASE": f"{kwargs['password']}"}
+    if "borg_relocated_repo_access_is_ok" in kwargs:
+        my_env["BORG_RELOCATED_REPO_ACCESS_IS_OK"] = kwargs["borg_relocated_repo_access_is_ok"]
     params = _get_parameters("prune", **kwargs)
     cmd = f"borg prune {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}"
 
@@ -103,6 +107,8 @@ def info(**kwargs) -> str:
         str: stdout of 'borg 'init'
     """
     my_env = {**os.environ, "BORG_PASSPHRASE": f"{kwargs['password']}"}
+    if "borg_relocated_repo_access_is_ok" in kwargs:
+        my_env["BORG_RELOCATED_REPO_ACCESS_IS_OK"] = kwargs["borg_relocated_repo_access_is_ok"]
     params = _get_parameters("info", **kwargs)
     cmd = f"borg info {params} {kwargs['borguser']}@{kwargs['borgserver']}:{kwargs['borgrepo']}"
 

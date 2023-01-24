@@ -17,6 +17,7 @@ def cmd_run(cmd: str, env: dict = None, **kwargs: dict):
     """
     my_stdout = ""
     if kwargs["debug"] is True:
+        logger.info(f"env= {env}")
         cmd = "echo " + cmd
     logger.info(
         "----------------------------------------------------------------------------"
